@@ -12,7 +12,7 @@ import Clarifai from 'clarifai';
 // Clarifai API configuration
 const apiKey = process.env.REACT_APP_CLARIFAI_API_KEY;
 const clarifai = new Clarifai.App({
-    apiKey: { apiKey },
+    apiKey: {apiKey},
 });
 
 class App extends Component {
@@ -21,12 +21,32 @@ class App extends Component {
         this.state = {
             input: '',
             imageUrl: '',
+            box: {},
         };
     }
 
+    calculateFaceLocation = (data) => {
+        const clarifaiFace =
+            data.outputs[0].data.regions[0].region_info.bounding_box;
+        const image = document.getElementById('inputimage');
+        const width = Number(image.width);
+        const height = Number(image.height);
+        console.log('width: ' + width + ', height: ' + height);
+        return {
+            leftCol: clarifaiFace.left_col * width,
+            topRow: clarifaiFace.top_row * height,
+            rightCol: width - clarifaiFace.right_col * width,
+            bottowmRow: height - clarifaiFace.bottowm_row * height,
+        };
+    };
+
+    displayFaceBox = (box) => {
+        console.log('box: ' + box);
+        this.setState({ box: box });
+    };
+
     onInputChange = (event) => {
         this.setState({ input: event.target.value });
-        console.log(process.env.CLARIFAI_API_KEY);
     };
 
     onButtonSubmit = () => {
@@ -35,11 +55,14 @@ class App extends Component {
         clarifai.models
             .predict(Clarifai.FACE_DETECT_MODEL, this.state.input)
             .then((res) => {
-                console.log(
-                    res.outputs[0].data.regions[0].region_info.bounding_box
-                );
+                this.displayFaceBox(this.calculateFaceLocation(res));
+                // console.log(res.outputs[0].data.regions[0].region_info.bounding_box);
+                // sample image
+                // https://samples.clarifai.com/face-det.jpg
             })
-            .catch((err) => {});
+            .catch((err) => {
+                console.log('error using clarifai api: ', err);
+            });
     };
 
     render() {
@@ -53,7 +76,7 @@ class App extends Component {
                     onInputChange={this.onInputChange}
                     onButtonSubmit={this.onButtonSubmit}
                 />
-                <FaceRecognition imageUrl={this.state.imageUrl} />
+                <FaceRecognition box={this.state.box} imageUrl={this.state.imageUrl} />
             </div>
         );
     }
