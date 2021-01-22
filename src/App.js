@@ -6,13 +6,16 @@ import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm';
 import Rank from './components/Rank/Rank';
 import BgParticles from './components/Particles/BgParticles';
 import FaceRecognition from './components/FaceRecognition/FaceRecognition';
+import SignIn from './components/SignIn/SignIn';
+import Register from './components/Register/Register';
 import { Component } from 'react';
 import Clarifai from 'clarifai';
 
 // Clarifai API configuration
 const apiKey = process.env.REACT_APP_CLARIFAI_API_KEY;
+
 const clarifai = new Clarifai.App({
-    apiKey: {apiKey},
+    apiKey: apiKey,
 });
 
 class App extends Component {
@@ -22,6 +25,8 @@ class App extends Component {
             input: '',
             imageUrl: '',
             box: {},
+            route: 'signin',
+            isSignedIn: false,
         };
     }
 
@@ -31,17 +36,15 @@ class App extends Component {
         const image = document.getElementById('inputimage');
         const width = Number(image.width);
         const height = Number(image.height);
-        console.log('width: ' + width + ', height: ' + height);
         return {
             leftCol: clarifaiFace.left_col * width,
             topRow: clarifaiFace.top_row * height,
             rightCol: width - clarifaiFace.right_col * width,
-            bottowmRow: height - clarifaiFace.bottowm_row * height,
+            bottomRow: height - clarifaiFace.bottom_row * height,
         };
     };
 
     displayFaceBox = (box) => {
-        console.log('box: ' + box);
         this.setState({ box: box });
     };
 
@@ -56,7 +59,7 @@ class App extends Component {
             .predict(Clarifai.FACE_DETECT_MODEL, this.state.input)
             .then((res) => {
                 this.displayFaceBox(this.calculateFaceLocation(res));
-                // console.log(res.outputs[0].data.regions[0].region_info.bounding_box);
+
                 // sample image
                 // https://samples.clarifai.com/face-det.jpg
             })
@@ -65,18 +68,39 @@ class App extends Component {
             });
     };
 
+    onRouteChange = (route) => {
+        if (route === 'signout') {
+            this.setState({ isSignedIn: false });
+        } else if (route === 'home') {
+            this.setState({ isSignedIn: true });
+        }
+        this.setState({ route: route });
+    };
+
     render() {
+        const { isSignedIn, imageUrl, route, box } = this.state;
         return (
             <div className="App">
                 <BgParticles />
-                <Navigation />
-                <Logo />
-                <Rank />
-                <ImageLinkForm
-                    onInputChange={this.onInputChange}
-                    onButtonSubmit={this.onButtonSubmit}
+                <Navigation
+                    onRouteChange={this.onRouteChange}
+                    isSignedIn={isSignedIn}
                 />
-                <FaceRecognition box={this.state.box} imageUrl={this.state.imageUrl} />
+                {route === 'home' ? (
+                    <div>
+                        <Logo />
+                        <Rank />
+                        <ImageLinkForm
+                            onInputChange={this.onInputChange}
+                            onButtonSubmit={this.onButtonSubmit}
+                        />
+                        <FaceRecognition box={box} imageUrl={imageUrl} />
+                    </div>
+                ) : route === 'signin' ? (
+                    <SignIn onRouteChange={this.onRouteChange} />
+                ) : (
+                    <Register onRouteChange={this.onRouteChange} />
+                )}
             </div>
         );
     }
