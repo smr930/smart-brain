@@ -12,10 +12,9 @@ import { Component } from 'react';
 import Clarifai from 'clarifai';
 
 // Clarifai API configuration
-const apiKey = process.env.REACT_APP_CLARIFAI_API_KEY;
-
+const { REACT_APP_CLARIFAI_API_KEY } = process.env;
 const clarifai = new Clarifai.App({
-    apiKey: apiKey,
+    apiKey: REACT_APP_CLARIFAI_API_KEY,
 });
 
 class App extends Component {
