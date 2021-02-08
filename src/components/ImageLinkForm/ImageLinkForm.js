@@ -9,7 +9,7 @@ const ImageLinkForm = ({ onInputChange, onPictureSubmit }) => {
                     'This Magic Brain will detect faces in your pictures. Give it a try.'
                 }
             </p>
-            <div className="yellow f4">
+            <div className="yellow f4 spacer">
             {
                 'Sample image: https://samples.clarifai.com/face-det.jpg'
             }
