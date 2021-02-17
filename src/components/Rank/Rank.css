@@ -1,0 +1,12 @@
+.entries {
+  background: rgba(137, 46, 255, 0.4);
+  display: inline;
+  padding: 0 20px;
+  margin: 0;
+  border-radius: 10px 100px / 120px;
+}
+
+.entries:hover {
+  color: rgb(230, 148, 255);
+  border-radius: 10px 110px / 120px;
+}

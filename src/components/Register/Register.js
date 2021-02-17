@@ -22,7 +22,7 @@ class Register extends React.Component {
     };
 
     onSubmitSignIn = () => {
-        fetch('http://localhost:3000/register', {
+        fetch(this.props.endPoint() + '/register', {
             method: 'post',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -42,7 +42,7 @@ class Register extends React.Component {
 
     render() {
         return (
-            <article className="br3 ba b--black-10 mv4 w-100 w-50-m w-25-l mw6 shadow-5 center">
+            <article className="br3 ba b--black-10 mv4 w-100 w-80-m w-30-l mw6 shadow-5 center">
                 <main className="pa4 black-80">
                     <div className="measure">
                         <fieldset
@@ -98,7 +98,7 @@ class Register extends React.Component {
                         </fieldset>
                         <div className="">
                             <input
-                                className="b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6 dib"
+                                className="b ph4 pv2 input-reset ba b--black bg-transparent grow pointer f5 dib"
                                 type="submit"
                                 value="Register"
                                 onClick={this.onSubmitSignIn}

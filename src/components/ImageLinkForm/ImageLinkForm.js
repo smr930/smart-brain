@@ -1,7 +1,7 @@
 import React from 'react';
 import './ImageLinkForm.css';
 
-const ImageLinkForm = ({ onInputChange, onPictureSubmit }) => {
+const ImageLinkForm = ({ onInputChange, onPictureSubmit, isInputBlank }) => {
     return (
         <div>
             <p className="f3 spacer">
@@ -10,9 +10,9 @@ const ImageLinkForm = ({ onInputChange, onPictureSubmit }) => {
                 }
             </p>
             <div className="yellow f4 spacer">
-            {
-                'Sample image: https://samples.clarifai.com/face-det.jpg'
-            }
+                {
+                    'Sample image: https://portal.clarifai.com/cms-assets/20180320221619/face-006.jpg'
+                }
             </div>
             <div className="center spacer">
                 <div className="form center pa4 br3 shadow-5">
@@ -29,6 +29,7 @@ const ImageLinkForm = ({ onInputChange, onPictureSubmit }) => {
                     </button>
                 </div>
             </div>
+            {isInputBlank && <p className="input-error">Image url is empty</p>}
         </div>
     );
 };

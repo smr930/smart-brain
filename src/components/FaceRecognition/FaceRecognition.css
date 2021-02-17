@@ -11,3 +11,8 @@ img {
     justify-self: center;
     cursor: pointer;
 }
+
+.spacer-bottom {
+    margin-top: 364px;
+}
+

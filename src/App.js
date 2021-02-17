@@ -13,7 +13,8 @@ import { Component } from 'react';
 const initialState = {
     input: '',
     imageUrl: '',
-    box: {},
+    isInputBlank: false,
+    box: [],
     route: 'signin',
     isSignedIn: false,
     user: {
@@ -31,6 +32,11 @@ class App extends Component {
         this.state = initialState;
     }
 
+    // heroku endpoint url
+    endPoint = () => {
+        return 'https://secret-tor-52418.herokuapp.com';
+    };
+
     loadUser = (data) => {
         this.setState({
             user: {
@@ -44,11 +50,12 @@ class App extends Component {
     };
 
     calculateFaceLocation = (data) => {
-        const clarifaiFace =
-            data.outputs[0].data.regions[0].region_info.bounding_box;
         const image = document.getElementById('inputimage');
         const width = Number(image.width);
         const height = Number(image.height);
+        const clarifaiFace =
+            data.outputs[0].data.regions[0].region_info.bounding_box;
+
         return {
             leftCol: clarifaiFace.left_col * width,
             topRow: clarifaiFace.top_row * height,
@@ -66,8 +73,13 @@ class App extends Component {
     };
 
     onPictureSubmit = () => {
+        if (this.state.input === '') {
+            this.setState({ isInputBlank: true });
+            return;
+        }
         this.setState({ imageUrl: this.state.input });
-        fetch('http://localhost:3000/imageurl', {
+        this.setState({ isInputBlank: false });
+        fetch(this.endPoint() + '/imageurl', {
             method: 'post',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -77,7 +89,7 @@ class App extends Component {
             .then((res) => res.json())
             .then((res) => {
                 if (res) {
-                    fetch('http://localhost:3000/image', {
+                    fetch(this.endPoint() + '/image', {
                         method: 'put',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
@@ -111,7 +123,7 @@ class App extends Component {
     };
 
     render() {
-        const { isSignedIn, imageUrl, route, box } = this.state;
+        const { isSignedIn, imageUrl, route, box, isInputBlank } = this.state;
         return (
             <div className="App">
                 <BgParticles />
@@ -129,6 +141,7 @@ class App extends Component {
                         <ImageLinkForm
                             onInputChange={this.onInputChange}
                             onPictureSubmit={this.onPictureSubmit}
+                            isInputBlank={isInputBlank}
                         />
                         <FaceRecognition box={box} imageUrl={imageUrl} />
                     </div>
@@ -136,11 +149,13 @@ class App extends Component {
                     <SignIn
                         loadUser={this.loadUser}
                         onRouteChange={this.onRouteChange}
+                        endPoint={this.endPoint}
                     />
                 ) : (
                     <Register
                         loadUser={this.loadUser}
                         onRouteChange={this.onRouteChange}
+                        endPoint={this.endPoint}
                     />
                 )}
             </div>
