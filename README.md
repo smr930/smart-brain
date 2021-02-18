@@ -1,6 +1,8 @@
-# Getting Started with Create React App
+# Smart Brain App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This react app allows users to detect faces using Clarifai API. React.js is used for front-end, Node.js for backend with Express.js as well as PosrtgreSQL database and it's deployed to heroku.
+
+
 
 ## Available Scripts
 
