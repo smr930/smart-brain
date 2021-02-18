@@ -1,7 +1,8 @@
 # Smart Brain App
 
-This react app allows users to detect faces using Clarifai API. React.js is used for front-end, Node.js for backend with Express.js as well as PosrtgreSQL database and it's deployed to heroku.
+This app allows users to detect faces using Clarifai API. React.js is used for front-end, Node.js for backend with Express.js as well as PostgreSQL database and it's deployed on heroku.
 
+![smart-brain-showcase](https://user-images.githubusercontent.com/17754265/108285432-12699400-7155-11eb-956c-ed897eaf9f73.jpg)
 
 
 ## Available Scripts
